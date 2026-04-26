@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Вибір періоду</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    label { display: block; margin-top: 10px; }
+    button { margin-top: 20px; padding: 10px 20px; }
+  </style>
+</head>
+<body>
+  <h2>Оберіть період для акта звірки</h2>
+
+  <label>Дата початку:
+    <input type="date" id="from">
+  </label>
+
+  <label>Дата завершення:
+    <input type="date" id="to">
+  </label>
+
+  <button onclick="sendPeriod()">Надіслати</button>
+
+  <script>
+    function sendPeriod() {
+      const from = document.getElementById("from").value;
+      const to = document.getElementById("to").value;
+
+      if (!from || !to) {
+        alert("Будь ласка, виберіть обидві дати");
+        return;
+      }
+
+      Telegram.WebApp.sendData(JSON.stringify({from, to}));
+    }
+  </script>
+</body>
+</html>
