@@ -182,14 +182,12 @@
         return `${d}.${m}.${y}`;
       }
     
-      const payload = {
-        command: {
+      const payload = {      
           name: "AKTZVIRKY_PERIOD",
           params: {
             date_start: toDDMMYYYY(fromVal),
             date_end:   toDDMMYYYY(toVal)
           }
-        }
       };
     
       Telegram.WebApp.sendData(JSON.stringify(payload));     
