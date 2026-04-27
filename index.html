@@ -2,38 +2,168 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
-  <title>Вибір періоду</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Акт звірки</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    label { display: block; margin-top: 10px; }
-    button { margin-top: 20px; padding: 10px 20px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: #f4f4f4;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 380px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.75rem 1.5rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #e8f3fd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.75rem;
+      font-size: 22px;
+    }
+
+    h2 {
+      font-size: 18px;
+      font-weight: 500;
+      color: #111;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: #888;
+    }
+
+    .fields {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #888;
+      margin-bottom: 6px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    input[type="date"] {
+      width: 100%;
+      height: 46px;
+      border: 0.5px solid #ccc;
+      border-radius: 8px;
+      padding: 0 12px;
+      font-size: 15px;
+      background: #f9f9f9;
+      color: #111;
+      outline: none;
+    }
+
+    input[type="date"]:focus {
+      border-color: #2481cc;
+    }
+
+    button {
+      width: 100%;
+      height: 48px;
+      border-radius: 8px;
+      border: none;
+      background: #2481cc;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.01em;
+    }
+
+    button:active {
+      background: #1a6aaa;
+    }
+
+    .error {
+      display: none;
+      text-align: center;
+      font-size: 13px;
+      color: #e24b4a;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
-  <h2>Оберіть період для акта звірки</h2>
+  <div class="card">
+    <div class="header">
+      <div class="icon">📋</div>
+      <h2>Акт звірки</h2>
+      <p class="subtitle">Оберіть період для формування акту</p>
+    </div>
 
-  <label>Дата початку:
-    <input type="date" id="from">
-  </label>
+    <div class="fields">
+      <div>
+        <label>Від</label>
+        <input type="date" id="from">
+      </div>
+      <div>
+        <label>До</label>
+        <input type="date" id="to">
+      </div>
+    </div>
 
-  <label>Дата завершення:
-    <input type="date" id="to">
-  </label>
-
-  <button onclick="sendPeriod()">Надіслати</button>
+    <button onclick="sendPeriod()">Сформувати</button>
+    <p class="error" id="err"></p>
+  </div>
 
   <script>
+    function fmt(d) { return d.toISOString().slice(0, 10); }
+
+    const now = new Date();
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastDay  = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    document.getElementById('from').value = fmt(firstDay);
+    document.getElementById('to').value   = fmt(lastDay);
+
+    function showErr(msg) {
+      const err = document.getElementById('err');
+      err.textContent = msg;
+      err.style.display = 'block';
+    }
+
     function sendPeriod() {
-      const from = document.getElementById("from").value;
-      const to = document.getElementById("to").value;
+      const fromVal = document.getElementById('from').value;
+      const toVal   = document.getElementById('to').value;
+      const err     = document.getElementById('err');
+      err.style.display = 'none';
 
-      if (!from || !to) {
-        alert("Будь ласка, виберіть обидві дати");
-        return;
-      }
+      if (!fromVal && !toVal) { showErr('Заповніть обидві дати'); return; }
+      if (!fromVal)           { showErr('Вкажіть дату початку'); return; }
+      if (!toVal)             { showErr('Вкажіть дату завершення'); return; }
+      if (fromVal > toVal)    { showErr('Дата початку не може бути пізніше дати завершення'); return; }
 
-      Telegram.WebApp.sendData(JSON.stringify({from, to}));
+      Telegram.WebApp.sendData(JSON.stringify({ from: fromVal, to: toVal }));
     }
   </script>
 </body>
