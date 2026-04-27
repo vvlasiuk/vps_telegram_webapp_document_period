@@ -153,12 +153,10 @@
 
     const now = nowKyiv();
 
-    // Останній день попереднього місяця
-    const fromDate = new Date(now.getFullYear(), now.getMonth(), 0);
+    const fromDate = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    // +2 дні від дати початку
     const toDate = new Date(fromDate);
-    toDate.setDate(toDate.getDate() + 2);
+    toDate.setDate(toDate.getDate() );
 
     document.getElementById('from').value = fmt(fromDate);
     document.getElementById('to').value   = fmt(toDate);
