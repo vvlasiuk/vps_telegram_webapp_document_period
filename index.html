@@ -174,9 +174,25 @@
       if (fromVal > toVal)    { showErr('Дата початку не може бути пізніше дати завершення'); return; }
 
       // Додаємо перевірочне повідомлення:
-      console.log(JSON.stringify({ from: fromVal, to: toVal }));
+      // console.log(JSON.stringify({ from: fromVal, to: toVal }));
       
-      Telegram.WebApp.sendData(JSON.stringify({ from: fromVal, to: toVal }));
+      // Перетворення YYYY-MM-DD → DD.MM.YYYY
+      function toDDMMYYYY(dateStr) {
+        const [y, m, d] = dateStr.split("-");
+        return `${d}.${m}.${y}`;
+      }
+    
+      const payload = {
+        command: {
+          name: "AKTZVIRKY_PERIOD",
+          params: {
+            date_start: toDDMMYYYY(fromVal),
+            date_end:   toDDMMYYYY(toVal)
+          }
+        }
+      };
+    
+      Telegram.WebApp.sendData(JSON.stringify(payload));     
     }
   </script>
 </body>
