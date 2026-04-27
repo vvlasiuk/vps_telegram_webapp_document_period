@@ -143,7 +143,6 @@
       return new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Kyiv' }));
     }
 
-    // Форматування дати у YYYY-MM-DD без зсуву UTC
     function fmt(d) {
       const y = d.getFullYear();
       const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -152,12 +151,8 @@
     }
 
     const now = nowKyiv();
-
     const fromDate = new Date(now.getFullYear(), now.getMonth(), 1);
-
-    const toDate = new Date(fromDate);
-    toDate.setDate(toDate.getDate() );
-
+    const toDate = now; // Поточна дата як дата завершення
     document.getElementById('from').value = fmt(fromDate);
     document.getElementById('to').value   = fmt(toDate);
 
