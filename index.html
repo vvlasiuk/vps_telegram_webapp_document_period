@@ -138,13 +138,30 @@
   </div>
 
   <script>
-    function fmt(d) { return d.toISOString().slice(0, 10); }
+    // Поточна дата у таймзоні Київ
+    function nowKyiv() {
+      return new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Kyiv' }));
+    }
 
-    const now = new Date();
-    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-    const lastDay  = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    document.getElementById('from').value = fmt(firstDay);
-    document.getElementById('to').value   = fmt(lastDay);
+    // Форматування дати у YYYY-MM-DD без зсуву UTC
+    function fmt(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    const now = nowKyiv();
+
+    // Останній день попереднього місяця
+    const fromDate = new Date(now.getFullYear(), now.getMonth(), 0);
+
+    // +2 дні від дати початку
+    const toDate = new Date(fromDate);
+    toDate.setDate(toDate.getDate() + 2);
+
+    document.getElementById('from').value = fmt(fromDate);
+    document.getElementById('to').value   = fmt(toDate);
 
     function showErr(msg) {
       const err = document.getElementById('err');
