@@ -174,7 +174,7 @@
       if (fromVal > toVal)    { showErr('Дата початку не може бути пізніше дати завершення'); return; }
 
       // Додаємо перевірочне повідомлення:
-      alert('Кнопку натиснуто!');      
+      console.log(JSON.stringify({ from: fromVal, to: toVal }));
       
       Telegram.WebApp.sendData(JSON.stringify({ from: fromVal, to: toVal }));
     }
